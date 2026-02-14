@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Calculateur de couple moteur - Transitools</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" href="assets/img/logo-site.ico" />
+</head>
+
+<body>
+    <div class="app-container">
+        <div id="sidebar-placeholder"></div>
+
+        <main class="main-content">
+            <div class="wrap">
+                <header>
+                    <div>
+                        <h1>Calculateur de couple moteur</h1>
+                        <p class="subtitle">
+                            Entre la puissance (W) et la vitesse (tr/min) → couple en <b>Nm</b>.
+                            Option motoréducteur : rapport de réduction + rendement.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="pill" title="Calcul en temps réel" style="display:none;">
+                            ⚡ <b>Live</b> recalcul instantané
+                        </div>
+                    </div>
+                </header>
+
+                <div class="grid">
+                    <!-- Entrées (Inputs) -->
+                    <section class="card">
+                        <div class="head">
+                            <h2>Entrées</h2>
+                            <div class="pill" title="Constante 60 / (2π)">
+                                9.55 = 60/(2π)
+                            </div>
+                        </div>
+
+                        <div class="content">
+                            <div class="row">
+                                <div>
+                                    <label for="p">Puissance</label>
+                                    <div class="field">
+                                        <input id="p" type="number" inputmode="decimal" min="0" step="any"
+                                            placeholder="ex: 750" />
+                                        <span class="unit">W</span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="n">Vitesse</label>
+                                    <div class="field">
+                                        <input id="n" type="number" inputmode="decimal" min="0" step="any"
+                                            placeholder="ex: 1500" />
+                                        <span class="unit">tr/min</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="switch">
+                                <div class="text">
+                                    <b>Motoréducteur</b>
+                                    <span>Calcule le couple en sortie + vitesse en sortie</span>
+                                </div>
+                                <div id="toggle" class="toggle" role="switch" aria-checked="false" tabindex="0"
+                                    data-on="false">
+                                </div>
+                            </div>
+
+                            <div id="gearFields" style="display:none;">
+                                <div class="row">
+                                    <div>
+                                        <label for="ratio">Rapport de réduction (i)</label>
+                                        <div class="field">
+                                            <input id="ratio" type="number" inputmode="decimal" min="0" step="any"
+                                                value="10" />
+                                            <span class="unit">×</span>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label for="eta">Rendement (η)</label>
+                                        <div class="field">
+                                            <input id="eta" type="number" inputmode="decimal" min="0" max="1" step="any"
+                                                value="0.9" />
+                                            <span class="unit">0–1</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="note">
+                                    Estimation standard : <b>T_sortie = T_moteur × i × η</b> et <b>n_sortie = n_moteur /
+                                        i</b>.<br />
+                                    Le rendement prend en compte les pertes mécaniques globales.
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Résultats (Results) -->
+                    <section class="card">
+                        <div class="head">
+                            <h2>Résultats</h2>
+                            <div class="pill" title="Couple en Newton-mètre">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" />
+                                </svg>
+                                Nm
+                            </div>
+                        </div>
+
+                        <div class="content text-center">
+                            <div class="result-grid">
+                                <div class="big-result">
+                                    <div class="value" id="tOut">—</div>
+                                    <div class="label">Nm</div>
+                                </div>
+
+                                <div class="warn" id="warn"></div>
+
+                                <div class="secondary-results">
+                                    <div class="mini-card">
+                                        <div class="label">Couple moteur (brut)</div>
+                                        <div class="value" id="tMotor">—</div>
+                                    </div>
+                                    <div class="mini-card">
+                                        <div class="label">Vitesse sortie</div>
+                                        <div class="value" id="nOut">—</div>
+                                    </div>
+                                </div>
+
+                                <div class="formula-box" id="formula">
+                                    T = 9.55 × P(W) / n(tr/min)
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="assets/js/nav.js"></script>
+    <script src="assets/js/couple-moteur.js"></script>
+</body>
+
+</html>

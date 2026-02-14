@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Générateur de Rapport - Transitools</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/report.css">
+    <link rel="icon" href="assets/img/logo-site.ico" />
+
+</head>
+
+<body>
+    <div class="app-container">
+        <div id="sidebar-placeholder"></div>
+
+        <main class="main-content">
+            <div class="wrap" style="max-width: 1400px;"> <!-- Wider for split view -->
+                <header>
+                    <div>
+                        <h1>Rapport d'Intervention</h1>
+                        <p class="subtitle">
+                            Générateur de rapports PDF standardisés pour les techniciens.<br>
+                            (Peut-être moins pratique qu'un traitement de texte, mais plus rapide et standardisé)
+                        </p>
+                    </div>
+                </header>
+
+                <div class="actions-bar">
+                    <button id="btnReset" class="btn-secondary" title="Effacer tout">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                        </svg>
+                        Nouveau
+                    </button>
+                    <button id="btnImport" class="btn-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z" />
+                        </svg>
+                        Importer JSON
+                        <input id="importJson" type="file" accept="application/json" hidden />
+                    </button>
+                    <button id="btnExportJson" class="btn-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+                        </svg>
+                        Sauver JSON
+                    </button>
+                    <div style="flex: 1"></div>
+                    <button id="btnPrint" class="btn-primary"
+                        style="background-color: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M19 8h-1V3H6v5H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zM8 5h8v3H8V5zm8 12v4H8v-4h8zm2-2v-2H6v2H4v-4c0-.55.45-1 1-1h14c.55 0 1 .45 1 1v4h-2z" />
+                            <circle cx="18" cy="11.5" r="1" />
+                        </svg>
+                        Générer PDF
+                    </button>
+                </div>
+
+                <div class="layout-split">
+                    <!-- Column 1: Form Inputs -->
+                    <div class="form-col">
+                        <section class="card">
+                            <div class="head">
+                                <h2>Informations Générales</h2>
+                            </div>
+                            <div class="content">
+                                <div class="row">
+                                    <fieldset>
+                                        <legend>Intervenant (TIM)</legend>
+
+                                        <div class="field mb-2">
+                                            <input id="em_nom" value="TIM S.A.S." placeholder="Entité" />
+                                        </div>
+                                        <div class="field mb-2">
+                                            <textarea id="em_adresse"
+                                                rows="2">173 CHEMIN DES BOUSCAUDS&#10;13 480 - CABRIES — France</textarea>
+                                        </div>
+                                        <div class="field">
+                                            <input id="em_contact" placeholder="Contact (Tél/Email)" />
+                                        </div>
+                                    </fieldset>
+
+                                    <fieldset>
+                                        <legend>Client</legend>
+                                        <div class="field mb-2">
+                                            <input id="cl_nom" placeholder="Nom du client" />
+                                        </div>
+                                        <div class="field mb-2">
+                                            <textarea id="cl_adresse" rows="2"
+                                                placeholder="Adresse complète"></textarea>
+                                        </div>
+                                        <div class="field mb-2">
+                                            <input id="cl_contact" placeholder="Contact sur place" />
+                                        </div>
+                                        <div class="field">
+                                            <input id="cl_num" placeholder="N° Client (Optionnel)" />
+                                        </div>
+                                    </fieldset>
+                                </div>
+
+                                <div class="row">
+                                    <div>
+                                        <label>Date</label>
+                                        <div class="field"><input id="date" type="date" /></div>
+                                    </div>
+                                    <div>
+                                        <label>Référence / Commande</label>
+                                        <div class="field"><input id="reference" placeholder="ex: SAV-2024-042" /></div>
+                                    </div>
+                                </div>
+
+                                <label class="mt-4">Motif de l'intervention</label>
+                                <div class="field">
+                                    <textarea id="motif" rows="2"
+                                        placeholder="Description courte (apparaîtra en titre)"></textarea>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="card mt-4">
+                            <div class="head">
+                                <h2>Détails techniques</h2>
+                            </div>
+                            <div class="content">
+                                <!-- Travaux Réalisés -->
+                                <div class="mb-4">
+                                    <label class="mb-2" style="font-weight: 700;">Travaux réalisés</label>
+                                    <div id="realisesWrap"></div>
+                                    <button class="btn-small mt-2" data-action="add-section"
+                                        data-target="realisesWrap">+ Ajouter une section</button>
+                                </div>
+
+                                <hr style="border-color: var(--border); opacity: 0.3; margin: 20px 0;">
+
+                                <!-- Problèmes -->
+                                <div class="mb-4">
+                                    <label class="mb-2" style="font-weight: 700;">Problèmes rencontrés /
+                                        Observations</label>
+                                    <div id="problemesWrap"></div>
+                                    <button class="btn-small mt-2" data-action="add-section"
+                                        data-target="problemesWrap">+ Ajouter une section</button>
+                                </div>
+
+                                <hr style="border-color: var(--border); opacity: 0.3; margin: 20px 0;">
+
+                                <!-- À faire -->
+                                <div>
+                                    <label class="mb-2" style="font-weight: 700;">Travaux restants à réaliser</label>
+                                    <textarea id="travaux_a_faire" rows="4"
+                                        placeholder="Liste des actions futures..."></textarea>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="card mt-4">
+                            <div class="head">
+                                <h2>Données & Perforamces</h2>
+                            </div>
+                            <div class="content">
+                                <table class="kv-table" id="kvTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Libellé</th>
+                                            <th>Valeur</th>
+                                            <th>Note</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                <button id="btnAddRow" class="btn-small mt-2">+ Ajouter une mesure</button>
+                            </div>
+                        </section>
+
+                        <section class="card mt-4">
+                            <div class="head">
+                                <h2>Photos</h2>
+                            </div>
+                            <div class="content">
+                                <button class="btn-secondary" onclick="document.getElementById('imgInput').click()">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <path
+                                            d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                    </svg>
+                                    Sélectionner des images...
+                                </button>
+                                <input id="imgInput" type="file" accept="image/*" multiple hidden />
+                                <div id="imgList" class="img-grid"></div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Column 2: Preview -->
+                    <div class="preview-col">
+                        <div class="preview-container" id="previewContainer">
+                            <!-- JS will inject .sheet pages here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Hidden Footer Source for Print -->
+    <div id="printFooterSource" style="display: none;">
+        <div class="pf-inner">
+            <img src="assets/img/logo-tim.svg" alt="Transitube">
+            <p>
+                TIM SAS – 173 Chemin des bouscauds – F-13 480 CABRIES – Tél.: 04.42.15.94.40 – tim@transitube.com<br />
+                N° intracommunautaire (EC) FR 92 31 722 06 14 – Code APE : 4669B<br />
+                SAS au capital de 600 000 euros – RCS Aix en Provence B 317 220 614 – Siren 317 220 614
+            </p>
+        </div>
+    </div>
+
+    <!-- Template: Simple Row -->
+    <template id="rowTpl">
+        <tr>
+            <td><input class="k" placeholder="Ex: Ampérage" /></td>
+            <td><input class="v" placeholder="12.5 A" /></td>
+            <td><input class="r" placeholder=" RAS" /></td>
+            <td>
+                <div class="del-row" style="cursor:pointer; color: var(--danger);">✕</div>
+            </td>
+        </tr>
+    </template>
+
+    <!-- Template: Section Item -->
+    <template id="subjectTpl">
+        <div class="section-block mb-2"
+            style="background: var(--bg-app); padding: 10px; border-radius: 8px; border: 1px dashed var(--border);">
+            <div style="display:flex; justify-content:space-between; margin-bottom: 5px;">
+                <input class="subject-topic" placeholder="Titre de section (ex: Zone Moteur)"
+                    style="font-weight:bold; border:none; background:transparent; color:var(--primary); width: 80%;" />
+                <div class="del-subject" style="cursor:pointer; color: var(--danger);">✕</div>
+            </div>
+            <textarea class="subject-items" rows="3" placeholder="- Item 1&#10;- Item 2"></textarea>
+        </div>
+    </template>
+
+    <!-- Template: Image -->
+    <template id="imgTpl">
+        <div class="img-thumb">
+            <img src="" />
+            <div class="del-img">✕</div>
+            <input class="caption" placeholder="Légende..."
+                style="position: absolute; bottom: 0; left: 0; width: 100%; border: none; background: rgba(0,0,0,0.7); color: white; font-size: 10px; padding: 2px;" />
+        </div>
+    </template>
+
+    <script src="assets/js/nav.js"></script>
+    <script src="assets/js/rapport.js"></script>
+</body>
+
+</html>

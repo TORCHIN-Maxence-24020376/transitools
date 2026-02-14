@@ -1,0 +1,659 @@
+/* =============================================
+   Report Generator — Styles
+   Theme Dark + Print Layout
+   ============================================= */
+
+/* ===== Preview Container ===== */
+.preview-container {
+    background-color: #525659;
+    padding: 24px;
+    border-radius: var(--radius-lg, 12px);
+    overflow: auto;
+    max-height: calc(100vh - 100px);
+    position: sticky;
+    top: 24px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+}
+
+/* ===== Each Page (A4 sheet) ===== */
+.sheet {
+    background: white;
+    color: #111;
+    width: 210mm;
+    height: 297mm;
+    margin: 0 auto;
+    padding: 15mm 15mm 0 15mm;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+    position: relative;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 11pt;
+    line-height: 1.45;
+    box-sizing: border-box;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sheet-content {
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+
+/* ===== Footer (visible in preview + print) ===== */
+.sheet-footer {
+    flex-shrink: 0;
+    border-top: 1px solid #cfd8ea;
+    padding: 3mm 0 4mm 0;
+    text-align: center;
+    margin-top: auto;
+}
+
+.sheet-footer .pf-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+}
+
+.sheet-footer img {
+    height: 8mm;
+    object-fit: contain;
+}
+
+.sheet-footer p {
+    margin: 0;
+    text-align: center;
+    font-size: 7.5pt;
+    color: #555;
+    line-height: 1.35;
+}
+
+/* ===== FORM & UI STYLES ===== */
+
+/* Layout Split */
+.layout-split {
+    display: grid;
+    grid-template-columns: minmax(380px, 1fr) minmax(0, 1.2fr);
+    gap: 24px;
+    align-items: start;
+}
+
+@media (max-width: 1400px) {
+    .layout-split {
+        grid-template-columns: 1fr;
+    }
+
+    .preview-col {
+        order: -1;
+    }
+}
+
+/* Scale preview to fit the column */
+.preview-col .preview-container {
+    transform-origin: top left;
+}
+
+/* Mobile specific overrides */
+@media (max-width: 768px) {
+    .preview-container {
+        padding: 8px !important;
+        /* Let it take natural height, governed by aspect ratio scaling */
+        align-items: flex-start !important;
+        /* Align left */
+
+        width: 95vw;
+    }
+
+    .actions-bar {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .actions-bar button {
+        flex: 1 1 auto;
+        /* Grow to fill space */
+        min-width: 120px;
+    }
+
+    .actions-bar div[style*="flex: 1"] {
+        display: none;
+        /* Hide spacer on mobile so buttons wrap naturally */
+    }
+
+    .card .content {
+        padding: 16px;
+    }
+}
+
+/* Button group */
+.actions-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+/* Fieldset/Legend */
+fieldset {
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 16px !important;
+    margin: 0 0 16px 0 !important;
+    min-inline-size: 0 !important;
+}
+
+legend {
+    padding: 0 8px !important;
+    color: var(--primary) !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    text-transform: uppercase !important;
+}
+
+/* Inputs & Textareas */
+input:not([type]),
+input[type="text"],
+input[type="date"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea,
+select {
+    width: 100%;
+    background-color: var(--bg-input, #0f172a) !important;
+    border: 1px solid var(--border, #334155) !important;
+    border-radius: var(--radius-md, 6px) !important;
+    padding: 10px 12px;
+    color: var(--text-main, #f8fafc) !important;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* Fix for inputs inside .field wrappers to match global style.css pattern */
+.field input:not([type]),
+.field input[type="text"],
+.field input[type="date"],
+.field input[type="number"],
+.field input[type="email"],
+.field textarea,
+.field select {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    width: 100%;
+}
+
+.field textarea {
+    /* style.css .field doesn't have padding. But textarea usually needs it. */
+    /* Let's revert padding removal for textarea if it looks bad, but for now: */
+    background: transparent !important;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--primary, #d81d2c) !important;
+    box-shadow: 0 0 0 3px var(--primary-dim, rgba(216, 29, 44, 0.1)) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--text-muted, #64748b);
+    opacity: 0.7;
+}
+
+/* Add calendar icon color fix for dark mode inputs */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+/* Buttons */
+button {
+    cursor: pointer;
+    font-family: inherit;
+    border: none;
+    outline: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background-color: var(--primary, #d81d2c);
+    color: white;
+    padding: 10px 20px;
+    border-radius: var(--radius-md, 6px);
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover, #b91926);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.btn-secondary {
+    background-color: var(--bg-input, #1e293b);
+    color: var(--text-main, #e2e8f0);
+    border: 1px solid var(--border, #334155);
+    padding: 8px 16px;
+    border-radius: var(--radius-md, 6px);
+}
+
+.btn-secondary:hover {
+    border-color: var(--primary, #d81d2c);
+    color: var(--primary, #d81d2c);
+    background-color: var(--bg-card, #1e293b);
+}
+
+.btn-small {
+    background-color: transparent;
+    border: 1px dashed var(--border, #334155);
+    color: var(--text-muted, #94a3b8);
+    padding: 6px 12px;
+    border-radius: var(--radius-md, 6px);
+    font-size: 0.85rem;
+    width: 100%;
+}
+
+.btn-small:hover {
+    border-color: var(--primary, #d81d2c);
+    color: var(--primary, #d81d2c);
+    background-color: var(--primary-dim, rgba(216, 29, 44, 0.05));
+}
+
+/* KV Table */
+.kv-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.kv-table th {
+    text-align: left;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.kv-table td {
+    padding: 4px;
+}
+
+.kv-table input {
+    width: 100%;
+    margin: 0;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    padding: 6px;
+    border-radius: 4px !important;
+}
+
+.kv-table input:hover {
+    background-color: var(--bg-app, #0f172a) !important;
+    border-color: var(--border, #334155) !important;
+}
+
+.kv-table input:focus {
+    background-color: var(--bg-input, #1e293b) !important;
+    border-color: var(--primary, #d81d2c) !important;
+}
+
+/* Section Blocks */
+.section-block {
+    background-color: var(--bg-input, #151b28);
+    border: 1px solid var(--border, #2d3748);
+    border-radius: var(--radius-md, 8px);
+    padding: 12px;
+    position: relative;
+    transition: border-color 0.2s;
+}
+
+.section-block:hover {
+    border-color: var(--primary-dim);
+}
+
+.section-block .subject-topic {
+    font-size: 1rem !important;
+    color: var(--primary, #d81d2c) !important;
+    font-weight: 700 !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+}
+
+.section-block .subject-topic:focus {
+    background-color: var(--bg-app) !important;
+    box-shadow: 0 0 0 2px var(--primary-dim) !important;
+}
+
+.section-block .subject-items {
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    padding: 8px 0 !important;
+    font-size: 0.95rem;
+    min-height: 60px;
+    box-shadow: none !important;
+}
+
+.section-block .subject-items:focus {
+    background: var(--bg-app) !important;
+    border-color: var(--border) !important;
+    padding: 10px !important;
+    border-radius: 6px !important;
+    box-shadow: 0 0 0 2px var(--primary-dim) !important;
+}
+
+/* Delete buttons */
+.del-subject,
+.del-row,
+.del-img {
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    background: none !important;
+    color: var(--text-muted) !important;
+    font-size: 1.2em;
+    padding: 4px;
+}
+
+.del-subject:hover,
+.del-row:hover,
+.del-img:hover {
+    opacity: 1;
+    color: var(--danger, #ef4444) !important;
+}
+
+/* Image List in Form (Moved from HTML) */
+.img-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.img-thumb {
+    position: relative;
+    aspect-ratio: 1;
+    background: var(--bg-input);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.img-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.img-thumb .del-img {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+
+/* ===== Rendu du rapport (identique à timgen) ===== */
+
+/* Entête */
+.out-head-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 4mm;
+}
+
+.out-head-logo img {
+    height: 22mm;
+    object-fit: contain;
+}
+
+.out-head-contacts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid #cfd8ea;
+    border-radius: 2mm;
+    overflow: hidden;
+    margin-bottom: 5mm;
+}
+
+.out-box {
+    padding: 4mm 5mm;
+    border-right: 1px solid #cfd8ea;
+    min-height: 34mm;
+}
+
+.out-box:last-child {
+    border-right: none;
+}
+
+.out-box h3 {
+    margin: 0 0 2mm;
+    font-size: 10.5pt;
+    letter-spacing: .02em;
+    font-weight: bold;
+}
+
+.out-box .muted {
+    color: #555;
+    font-size: 0.92em;
+}
+
+/* Motif */
+.out-motif-title {
+    text-align: center;
+    margin: 5mm 0 1.5mm 0;
+    font-weight: 800;
+    color: #d62027;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+}
+
+.out-motif-line {
+    text-align: center;
+    margin-bottom: 5mm;
+}
+
+.marker {
+    padding: 0 .25em;
+    background: linear-gradient(transparent 60%, #fff176 0%);
+    font-weight: 500;
+}
+
+/* Sections */
+.out-section {
+    margin: 6mm 0;
+}
+
+.out-section--underline h3 {
+    margin: 0 0 3mm;
+    font-size: 12pt;
+    font-weight: 700;
+    color: #111;
+}
+
+.out-section--underline h3::after {
+    content: "";
+    display: block;
+    height: 3px;
+    background: #d62027;
+    margin-top: 6px;
+}
+
+.out-topic {
+    margin: 0 0 3mm;
+    font-style: italic;
+    color: #333;
+}
+
+ol.num {
+    margin: 0;
+    padding-left: 6mm;
+}
+
+ol.num li {
+    margin: 0 0 1.2mm;
+}
+
+/* KV Table */
+.kv-out {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2mm;
+}
+
+.kv-out td,
+.kv-out th {
+    border: 1px solid #cfd8ea;
+    padding: 3mm;
+    font-size: 10pt;
+}
+
+.kv-out th {
+    background: #f5f7fb;
+    text-align: left;
+    font-weight: 600;
+}
+
+/* Images */
+.out-images {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4mm;
+    margin-top: 2mm;
+}
+
+.out-images figure {
+    border: 1px solid #cfd8ea;
+    border-radius: 6px;
+    padding: 2mm;
+    margin: 0;
+}
+
+.out-images img {
+    width: 100%;
+    height: 55mm;
+    object-fit: cover;
+    border-radius: 3px;
+    border: 1px solid #e7ecf6;
+}
+
+.out-images figcaption {
+    font-size: 9pt;
+    color: #333;
+    margin-top: 2mm;
+}
+
+/* ===== PRINT ===== */
+@media print {
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    @page {
+        size: A4;
+        margin: 0;
+    }
+
+    html,
+    body {
+        background: #fff !important;
+        color: #000 !important;
+        margin: 0;
+        padding: 0;
+        overflow: visible !important;
+    }
+
+    /* Hide everything standard */
+    .app-container,
+    .sidebar,
+    .main-content,
+    .theme-toggle,
+    #sidebar-placeholder,
+    #printFooterSource {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        width: 0 !important;
+        overflow: hidden !important;
+        position: absolute !important;
+        /* Move out of flow */
+    }
+
+    /* Show ONLY the print area generated by JS */
+    #print-area {
+        display: block !important;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        z-index: 9999;
+        background: white !important;
+    }
+
+    #print-area .sheet {
+        width: 210mm !important;
+        height: 297mm !important;
+        /* Force exact A4 height */
+        padding: 15mm 15mm 0 15mm !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        page-break-after: always;
+        overflow: hidden !important;
+        position: relative !important;
+        background: white !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        transform: none !important;
+    }
+
+    #print-area .sheet:last-child {
+        page-break-after: auto;
+    }
+
+    /* Keep internal sheet styles */
+    #print-area .sheet-content {
+        flex: 1 1 auto;
+        overflow: hidden;
+    }
+
+    #print-area .sheet-footer {
+        flex-shrink: 0;
+        margin-top: auto;
+        display: block !important;
+    }
+}
