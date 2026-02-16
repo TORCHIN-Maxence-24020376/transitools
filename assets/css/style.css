@@ -103,9 +103,10 @@ body {
 
 /* Fix for logo overlap - ensure image fits */
 .brand img {
-    height: 32px;
-    /* Slightly larger since text is gone */
+    height: auto;
     width: auto;
+    max-width: 200px;
+    max-height: 80px;
     object-fit: contain;
 }
 
@@ -789,8 +790,6 @@ code {
         overflow: visible !important;
     }
 
-    .wrap,
-    .layout-split,
     .preview-col {
         max-width: none !important;
         margin: 0 !important;
@@ -798,6 +797,7 @@ code {
         display: block !important;
         background: transparent !important;
     }
+
 
     .preview-container {
         background: transparent !important;
@@ -844,4 +844,21 @@ code {
         break-inside: avoid;
         page-break-inside: avoid;
     }
+}
+
+/* Utilities */
+.mt-2 {
+    margin-top: 8px !important;
+}
+
+.mt-4 {
+    margin-top: 24px !important;
+}
+
+.mb-2 {
+    margin-bottom: 8px !important;
+}
+
+.mb-4 {
+    margin-bottom: 24px !important;
 }

@@ -331,7 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const footer = el('div', { class: 'sheet-footer' });
         footer.innerHTML = `
             <div class="pf-inner">
-                <img src="assets/img/logo-tim.svg" alt="Transitube">
+                <img src="assets/img/transitube.jpg" alt="Transitube">
                 <p>
                     TIM SAS – 173 Chemin des bouscauds – F-13 480 CABRIES – Tél.: 04.42.15.94.40 – tim@transitube.com<br>
                     N° intracommunautaire (EC) FR 92 31 722 06 14 – Code APE : 4669B<br>
@@ -367,7 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Logo
         const logoWrap = el('div', { class: 'out-head-logo' });
-        logoWrap.appendChild(el('img', { src: 'assets/img/logo-tim.svg', alt: 'Transitube' }));
+        logoWrap.appendChild(el('img', { src: 'assets/img/transitube.jpg', alt: 'Transitube' }));
         blocks.push(logoWrap);
 
         // Contacts
@@ -387,10 +387,16 @@ document.addEventListener('DOMContentLoaded', () => {
             emContactBlock = `<div class="muted">${esc(data.em_contact)}</div>`;
         }
 
+        let datesBlock = '';
+        if (data.date_debut || data.date_fin) {
+            datesBlock = `<div class="muted">Intervention du ${esc(data.date_debut || '?')} au ${esc(data.date_fin || '?')}</div>`;
+        }
+
         emBox.innerHTML = `
             <h3>${esc(data.em_nom || 'Émetteur')}</h3>
             ${data.em_adresse ? `<div>${nl2br(esc(data.em_adresse))}</div>` : ''}
             ${emContactBlock}
+            ${datesBlock}
         `;
         const clBox = el('div', { class: 'out-box' });
 
@@ -406,17 +412,11 @@ document.addEventListener('DOMContentLoaded', () => {
             contactBlock = `<div class="muted">${esc(data.cl_contact)}</div>`;
         }
 
-        let datesBlock = '';
-        if (data.date_debut || data.date_fin) {
-            datesBlock = `<div class="muted">Intervention du ${esc(data.date_debut || '?')} au ${esc(data.date_fin || '?')}</div>`;
-        }
-
         clBox.innerHTML = `
             <h3>${esc(data.cl_nom || 'Client')}</h3>
             ${data.cl_adresse ? `<div>${nl2br(esc(data.cl_adresse))}</div>` : ''}
             ${contactBlock}
             ${data.cl_num ? `<div class="muted">Numéro Client : ${esc(data.cl_num)}</div>` : ''}
-            ${datesBlock}
             ${(data.date || data.reference) ? `<div class="muted">Rapport du : ${esc(data.date)}${data.reference ? ' — Réf. : ' + esc(data.reference) : ''}</div>` : ''}
         `;
         contacts.append(emBox, clBox);

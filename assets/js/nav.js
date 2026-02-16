@@ -29,7 +29,7 @@ function initNav() {
     brand.href = 'index.html';
     brand.className = 'brand';
     brand.innerHTML = `
-        <img src="assets/img/logo-tim.svg" alt="Transitube">
+        <img src="assets/img/transitube.png" alt="Transitube">
     `;
 
     const links = document.createElement('div');
