@@ -76,26 +76,66 @@
 /* ===== FORM & UI STYLES ===== */
 
 /* Layout Split */
+/* Layout Split - Redesigned for Collapsible Panel */
 .layout-split {
-    display: grid;
-    grid-template-columns: minmax(380px, 1fr) minmax(0, 1.2fr);
+    display: flex;
     gap: 24px;
     align-items: start;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.form-col {
+    flex: 1;
+    min-width: 0;
+    transition: all 0.3s ease;
+}
+
+/* Preview Column - Collapsable */
+.preview-col {
+    width: 50%;
+    /* Default width when open */
+    flex-shrink: 0;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, margin 0.3s ease;
+    opacity: 1;
+    overflow: hidden;
+}
+
+/* Hidden State */
+.layout-split.preview-hidden .preview-col {
+    width: 0;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+}
+
+.layout-split.preview-hidden {
+    gap: 0;
+    /* Remove gap when hidden so form takes full width */
 }
 
 @media (max-width: 1400px) {
     .layout-split {
-        grid-template-columns: 1fr;
+        flex-direction: column;
     }
 
     .preview-col {
+        width: 100%;
         order: -1;
+    }
+
+    .layout-split.preview-hidden .preview-col {
+        height: 0;
+        /* On mobile, collapse height instead of width */
+        width: 100%;
     }
 }
 
 /* Scale preview to fit the column */
 .preview-col .preview-container {
     transform-origin: top left;
+    width: 100%;
+    /* Ensure container fits within col */
 }
 
 /* Mobile specific overrides */

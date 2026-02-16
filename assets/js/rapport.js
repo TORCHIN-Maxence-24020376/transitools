@@ -133,6 +133,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     qs('#btnImport').addEventListener('click', () => qs('#importJson').click());
 
+    // --- Preview Toggle ---
+    const btnToggle = qs('#btnTogglePreview');
+    const layoutSplit = qs('.layout-split');
+
+    // Initially force open or rely on CSS default
+    // Let's store preference
+    const isPreviewHidden = localStorage.getItem('hidePreview') === 'true';
+    if (isPreviewHidden) {
+        layoutSplit.classList.add('preview-hidden');
+    }
+
+    btnToggle.addEventListener('click', () => {
+        layoutSplit.classList.toggle('preview-hidden');
+        const hidden = layoutSplit.classList.contains('preview-hidden');
+        localStorage.setItem('hidePreview', hidden);
+
+        // Wait for CSS transition to end then rescale
+        setTimeout(scalePreview, 350);
+    });
+
     qs('#importJson').addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -153,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Form Logic ---
     function restoreData(data) {
         // Simple fields
-        ['em_nom', 'em_adresse', 'em_contact', 'cl_nom', 'cl_adresse', 'cl_contact', 'cl_num', 'date', 'reference', 'motif', 'travaux_a_faire'].forEach(id => {
+        ['em_nom', 'em_adresse', 'em_contact', 'em_contact_nom', 'em_contact_tel', 'em_contact_mail', 'cl_nom', 'cl_adresse', 'cl_contact', 'cl_contact_nom', 'cl_contact_tel', 'cl_contact_mail', 'cl_num', 'date', 'date_debut', 'date_fin', 'reference', 'motif', 'travaux_a_faire'].forEach(id => {
             if (data[id] !== undefined) {
                 const el = qs('#' + id);
                 if (el) el.value = Array.isArray(data[id]) ? data[id].join('\n') : data[id];
@@ -243,11 +263,19 @@ document.addEventListener('DOMContentLoaded', () => {
             em_nom: getVal('em_nom'),
             em_adresse: getVal('em_adresse'),
             em_contact: getVal('em_contact'),
+            em_contact_nom: getVal('em_contact_nom'),
+            em_contact_tel: getVal('em_contact_tel'),
+            em_contact_mail: getVal('em_contact_mail'),
             cl_nom: getVal('cl_nom'),
             cl_adresse: getVal('cl_adresse'),
             cl_contact: getVal('cl_contact'),
+            cl_contact_nom: getVal('cl_contact_nom'),
+            cl_contact_tel: getVal('cl_contact_tel'),
+            cl_contact_mail: getVal('cl_contact_mail'),
             cl_num: getVal('cl_num'),
             date: getVal('date'),
+            date_debut: getVal('date_debut'),
+            date_fin: getVal('date_fin'),
             reference: getVal('reference'),
             motif: getVal('motif'),
             realises_sections: collectSections('realisesWrap'),
@@ -345,18 +373,51 @@ document.addEventListener('DOMContentLoaded', () => {
         // Contacts
         const contacts = el('div', { class: 'out-head-contacts' });
         const emBox = el('div', { class: 'out-box' });
+
+        // Emitter Contact
+        let emContactBlock = '';
+        const emParts = [];
+        if (data.em_contact_nom) emParts.push(esc(data.em_contact_nom));
+        if (data.em_contact_tel) emParts.push(esc(data.em_contact_tel));
+        if (data.em_contact_mail) emParts.push(esc(data.em_contact_mail));
+
+        if (emParts.length > 0) {
+            emContactBlock = `<div class="muted">${emParts.join(' <br> ')}</div>`;
+        } else if (data.em_contact) {
+            emContactBlock = `<div class="muted">${esc(data.em_contact)}</div>`;
+        }
+
         emBox.innerHTML = `
             <h3>${esc(data.em_nom || 'Émetteur')}</h3>
             ${data.em_adresse ? `<div>${nl2br(esc(data.em_adresse))}</div>` : ''}
-            ${data.em_contact ? `<div class="muted">${esc(data.em_contact)}</div>` : ''}
+            ${emContactBlock}
         `;
         const clBox = el('div', { class: 'out-box' });
+
+        let contactBlock = '';
+        const cParts = [];
+        if (data.cl_contact_nom) cParts.push(esc(data.cl_contact_nom));
+        if (data.cl_contact_tel) cParts.push(esc(data.cl_contact_tel));
+        if (data.cl_contact_mail) cParts.push(esc(data.cl_contact_mail));
+
+        if (cParts.length > 0) {
+            contactBlock = `<div class="muted">${cParts.join(' <br> ')}</div>`;
+        } else if (data.cl_contact) {
+            contactBlock = `<div class="muted">${esc(data.cl_contact)}</div>`;
+        }
+
+        let datesBlock = '';
+        if (data.date_debut || data.date_fin) {
+            datesBlock = `<div class="muted">Intervention du ${esc(data.date_debut || '?')} au ${esc(data.date_fin || '?')}</div>`;
+        }
+
         clBox.innerHTML = `
             <h3>${esc(data.cl_nom || 'Client')}</h3>
             ${data.cl_adresse ? `<div>${nl2br(esc(data.cl_adresse))}</div>` : ''}
-            ${data.cl_contact ? `<div class="muted">${esc(data.cl_contact)}</div>` : ''}
+            ${contactBlock}
             ${data.cl_num ? `<div class="muted">Numéro Client : ${esc(data.cl_num)}</div>` : ''}
-            ${(data.date || data.reference) ? `<div class="muted">Date : ${esc(data.date)}${data.reference ? ' — Réf. : ' + esc(data.reference) : ''}</div>` : ''}
+            ${datesBlock}
+            ${(data.date || data.reference) ? `<div class="muted">Rapport du : ${esc(data.date)}${data.reference ? ' — Réf. : ' + esc(data.reference) : ''}</div>` : ''}
         `;
         contacts.append(emBox, clBox);
         blocks.push(contacts);
