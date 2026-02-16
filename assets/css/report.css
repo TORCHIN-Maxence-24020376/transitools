@@ -124,6 +124,10 @@
         order: -1;
     }
 
+    .form-col {
+        width: 100%;
+    }
+
     .layout-split.preview-hidden .preview-col {
         height: 0;
         /* On mobile, collapse height instead of width */
