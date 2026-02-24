@@ -14,6 +14,11 @@ const navItems = [
         url: 'rapport-intervention.html',
         icon: '<svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>'
     },
+    {
+        name: 'Poids Tube',
+        url: 'poids-tube.html',
+        icon: '<svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>'
+    },
 ];
 
 function initNav() {
@@ -25,12 +30,13 @@ function initNav() {
     const sidebar = document.createElement('nav');
     sidebar.className = 'sidebar';
 
-    const brand = document.createElement('a');
-    brand.href = 'index.html';
+    const brand = document.createElement('div');
     brand.className = 'brand';
+    brand.style.cursor = 'pointer';
     brand.innerHTML = `
         <img src="assets/img/transitube.png" alt="Transitube">
     `;
+    brand.onclick = showCompanyInfo;
 
     const links = document.createElement('div');
     links.className = 'nav-links';
@@ -73,6 +79,119 @@ function initNav() {
     // Init theme
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
+}
+
+function showCompanyInfo() {
+    // Check if modal already exists
+    if (document.getElementById('company-info-modal')) {
+        document.getElementById('company-info-modal').classList.add('active');
+        document.getElementById('company-info-overlay').classList.add('active');
+        return;
+    }
+
+    const overlay = document.createElement('div');
+    overlay.id = 'company-info-overlay';
+    overlay.className = 'info-overlay';
+    overlay.onclick = closeCompanyInfo;
+
+    const modal = document.createElement('div');
+    modal.id = 'company-info-modal';
+    modal.className = 'info-modal';
+    modal.innerHTML = `
+        <button class="close-btn" onclick="closeCompanyInfo()">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </button>
+        <h3>TIM SAS</h3>
+        
+        <div class="info-line">
+            <span>173 Chemin des bouscauds, 13 480 CABRIES</span>
+            <button class="mini-copy" onclick="copyText('173 Chemin des bouscauds, 13 480 CABRIES', this)" title="Copier l'adresse">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+        </div>
+
+        <div class="info-line" style="margin-top: 16px;">
+            <span><b>SIRET :</b> 31722061400042</span>
+            <button class="mini-copy" onclick="copyText('31722061400042', this)" title="Copier le SIRET">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+        </div>
+
+        <div class="info-line">
+            <span><b>APE :</b> 4669B</span>
+            <button class="mini-copy" onclick="copyText('4669B', this)" title="Copier l'APE">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+        </div>
+
+        <div class="info-line">
+            <span><b>Num TVA :</b> FR92317220614</span>
+            <button class="mini-copy" onclick="copyText('FR92317220614', this)" title="Copier la TVA">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+        </div>
+
+        <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
+            <button class="btn-copy" onclick="copyCompanyInfo(this)">
+                Tout copier
+            </button>
+            <div style="font-size: 0.8rem; color: var(--text-muted); text-align: center;"> 
+                Cliquez à côté pour fermer
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+    document.body.appendChild(modal);
+
+    // Force reflow
+    setTimeout(() => {
+        overlay.classList.add('active');
+        modal.classList.add('active');
+    }, 10);
+}
+
+function copyCompanyInfo(btn) {
+    const info = `TIM SAS
+173 Chemin des bouscauds
+13 480 CABRIES
+
+SIRET : 31722061400042
+APE : 4669B
+Num TVA : FR92317220614`;
+
+    navigator.clipboard.writeText(info).then(() => {
+        const originalText = btn.textContent;
+        btn.textContent = 'Copié !';
+        btn.style.backgroundColor = 'var(--success)';
+        btn.style.color = 'white';
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.backgroundColor = '';
+            btn.style.color = '';
+        }, 2000);
+    });
+}
+
+function copyText(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--success)" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>';
+        btn.style.borderColor = 'var(--success)';
+        setTimeout(() => {
+            btn.innerHTML = originalContent;
+            btn.style.borderColor = '';
+        }, 2000);
+    });
+}
+
+function closeCompanyInfo() {
+    const modal = document.getElementById('company-info-modal');
+    const overlay = document.getElementById('company-info-overlay');
+    if (modal) modal.classList.remove('active');
+    if (overlay) overlay.classList.remove('active');
 }
 
 function toggleTheme() {

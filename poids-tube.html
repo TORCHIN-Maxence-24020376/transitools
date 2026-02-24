@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Calculateur de poids de tube - Transitools</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" href="assets/img/logo-site.ico" />
+    <style>
+        .master-calc {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-app));
+            border: 1px solid var(--primary);
+            border-left: 6px solid var(--primary);
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-md);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .master-calc label {
+            color: var(--primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+        }
+
+        .master-calc .field input {
+            font-size: 1.5rem;
+            padding: 16px;
+        }
+
+        .tube-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .tube-table th {
+            background-color: var(--bg-input);
+            padding: 16px;
+            text-align: left;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+        }
+
+        .tube-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .tube-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tube-table tr:hover td {
+            background-color: var(--primary-dim);
+        }
+
+        .tube-type {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .tube-ref {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .tube-result-cell {
+            text-align: right;
+        }
+
+        .tube-result-val {
+            font-family: var(--font-mono);
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .tube-unit {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-left: 4px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-left: 8px;
+        }
+
+        .section-title h2 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <div id="sidebar-placeholder"></div>
+
+        <main class="main-content">
+            <div class="wrap">
+                <header>
+                    <div>
+                        <h1>Tubes Transitube : Calculateur de Poids</h1>
+                        <p class="subtitle">
+                            Entrez une longueur pour comparer instantanément le poids de tous les modèles.
+                        </p>
+                    </div>
+                </header>
+
+                <!-- Master Input Section -->
+                <section class="master-calc">
+                    <div class="row" style="margin-bottom: 0;">
+                        <div style="grid-column: span 2;">
+                            <label for="master-length">Longueur à calculer (m)</label>
+                            <div class="field">
+                                <input id="master-length" type="number" inputmode="decimal" min="0" step="any"
+                                    placeholder="Ex: 6.5" autofocus>
+                                <span class="unit">mètres</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="comparison-grid">
+                    <!-- TUBES INTERNES -->
+                    <div>
+                        <div class="section-title">
+                            <div class="pill" style="background: var(--primary); color: white;">TI</div>
+                            <h2>Tubes Internes</h2>
+                        </div>
+                        <table class="tube-table">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Poids au mètre</th>
+                                    <th style="text-align: right;">Poids Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ti-body">
+                                <tr data-weight="0.066">
+                                    <td class="tube-type">TI 8x12</td>
+                                    <td class="tube-ref">0,066 kg/m</td>
+                                    <td class="tube-result-cell">
+                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
+                                    </td>
+                                </tr>
+                                <tr data-weight="0.093">
+                                    <td class="tube-type">TI 12x16</td>
+                                    <td class="tube-ref">0,093 kg/m</td>
+                                    <td class="tube-result-cell">
+                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
+                                    </td>
+                                </tr>
+                                <tr data-weight="0.145">
+                                    <td class="tube-type">TI 15x20</td>
+                                    <td class="tube-ref">0,145 kg/m</td>
+                                    <td class="tube-result-cell">
+                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
+                                    </td>
+                                </tr>
+                                <tr data-weight="0.243">
+                                    <td class="tube-type">TI 24x29,5</td>
+                                    <td class="tube-ref">0,243 kg/m</td>
+                                    <td class="tube-result-cell">
+                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- TUBES EXTERNES -->
+                    <div>
+                        <div class="section-title">
+                            <div class="pill" style="background: var(--primary); color: white;">TE</div>
+                            <h2>Tubes Externes</h2>
+                        </div>
+                        <table class="tube-table">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Poids au mètre</th>
+                                    <th style="text-align: right;">Poids Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="te-body">
+                                <tr data-weight="0.34">
+                                    <td class="tube-type">TE 30</td>
+                                    <td class="tube-ref">0,340 kg/m</td>
+                                    <td class="tube-result-cell">
+                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
+                                    </td>
+                                </tr>
+                                <tr data-weight="0.549">
+                                    <td class="tube-type">TE 39</td>
+                                    <td class="tube-ref">0,549 kg/m</td>
+                                    <td class="tube-result-cell">
+                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
+                                    </td>
+                                </tr>
+                                <tr data-weight="0.779">
+                                    <td class="tube-type">TE 53</td>
+                                    <td class="tube-ref">0,779 kg/m</td>
+                                    <td class="tube-result-cell">
+                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
+                                    </td>
+                                </tr>
+                                <tr data-weight="1.237">
+                                    <td class="tube-type">TE 70</td>
+                                    <td class="tube-ref">1,237 kg/m</td>
+                                    <td class="tube-result-cell">
+                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
+                                    </td>
+                                </tr>
+                                <tr data-weight="1.402">
+                                    <td class="tube-type">TE 80</td>
+                                    <td class="tube-ref">1,402 kg/m</td>
+                                    <td class="tube-result-cell">
+                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
+                                    </td>
+                                </tr>
+                                <tr data-weight="1.731">
+                                    <td class="tube-type">TE 100</td>
+                                    <td class="tube-ref">1,731 kg/m</td>
+                                    <td class="tube-result-cell">
+                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <footer class="footer">
+                    Poids calculé suivant les données constructeur. Transitools © 2026
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <script src="assets/js/nav.js"></script>
+    <script src="assets/js/poids-tube.js"></script>
+</body>
+
+</html>
