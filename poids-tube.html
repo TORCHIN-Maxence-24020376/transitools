@@ -8,118 +8,130 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="icon" href="assets/img/logo-site.ico" />
     <style>
-        .master-calc {
-            background: linear-gradient(135deg, var(--bg-card), var(--bg-app));
-            border: 1px solid var(--primary);
-            border-left: 6px solid var(--primary);
-            padding: 32px;
-            border-radius: var(--radius-lg);
-            margin-bottom: 32px;
-            box-shadow: var(--shadow-md);
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        .master-calc label {
-            color: var(--primary);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-size: 0.8rem;
-            margin-bottom: 12px;
-        }
-
-        .master-calc .field input {
-            font-size: 1.5rem;
-            padding: 16px;
-        }
-
-        .tube-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
+        .tube-table-card {
             background-color: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             overflow: hidden;
-            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
         }
 
-        .tube-table th {
+        .table-header {
             background-color: var(--bg-input);
-            padding: 16px;
-            text-align: left;
+            padding: 12px 16px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1.5fr 1fr;
+            gap: 12px;
             font-size: 0.75rem;
             text-transform: uppercase;
             color: var(--text-muted);
-            border-bottom: 1px solid var(--border);
             font-weight: 600;
-        }
-
-        .tube-table td {
-            padding: 16px;
             border-bottom: 1px solid var(--border);
-            transition: all 0.2s;
         }
 
-        .tube-table tr:last-child td {
+        .tube-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1.5fr 1fr;
+            gap: 12px;
+            padding: 12px 16px;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            transition: background-color 0.2s;
+        }
+
+        .tube-row:last-child {
             border-bottom: none;
         }
 
-        .tube-table tr:hover td {
-            background-color: var(--primary-dim);
+        .tube-row:hover {
+            background-color: rgba(216, 29, 44, 0.02);
         }
 
-        .tube-type {
+        .tube-name {
             font-weight: 700;
             color: var(--text-main);
         }
 
         .tube-ref {
             font-family: var(--font-mono);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
+        }
+
+        .tube-input-cell .field {
+            margin-bottom: 0;
+        }
+
+        .tube-input-cell input {
+            padding: 8px 10px;
+            font-size: 0.9rem;
+            text-align: right;
         }
 
         .tube-result-cell {
             text-align: right;
-        }
-
-        .tube-result-val {
             font-family: var(--font-mono);
             font-weight: 800;
             color: var(--primary);
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
 
-        .tube-unit {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-left: 4px;
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 24px;
-        }
-
-        @media (max-width: 1024px) {
-            .comparison-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .section-title {
+        .total-card {
+            margin-top: 32px;
+            background: linear-gradient(135deg, var(--primary), #b91926);
+            color: white;
+            padding: 24px 32px;
+            border-radius: var(--radius-lg);
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            padding-left: 8px;
+            box-shadow: 0 10px 15px -3px rgba(216, 29, 44, 0.3);
         }
 
-        .section-title h2 {
+        .total-card h3 {
             margin: 0;
-            font-size: 1.1rem;
-            color: var(--text-main);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.9;
+        }
+
+        .total-card .big-val {
+            font-size: 2.5rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+        }
+
+        .total-card .unit {
+            font-size: 1.2rem;
+            margin-left: 8px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .table-header {
+                display: none;
+            }
+
+            .tube-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                padding: 16px;
+            }
+
+            .tube-name {
+                grid-column: span 2;
+                font-size: 1.1rem;
+            }
+
+            .tube-ref {
+                font-size: 0.75rem;
+            }
+
+            .tube-result-cell {
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
@@ -132,134 +144,171 @@
             <div class="wrap">
                 <header>
                     <div>
-                        <h1>Tubes Transitube : Calculateur de Poids</h1>
+                        <h1>Calculateur de poids de Tube</h1>
                         <p class="subtitle">
-                            Entrez une longueur pour comparer instantanément le poids de tous les modèles.
+                            Saisissez les longueurs pour chaque type de tube pour obtenir le poids total.
                         </p>
                     </div>
                 </header>
 
-                <!-- Master Input Section -->
-                <section class="master-calc">
-                    <div class="row" style="margin-bottom: 0;">
-                        <div style="grid-column: span 2;">
-                            <label for="master-length">Longueur à calculer (m)</label>
-                            <div class="field">
-                                <input id="master-length" type="number" inputmode="decimal" min="0" step="any"
-                                    placeholder="Ex: 6.5" autofocus>
-                                <span class="unit">mètres</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <div class="comparison-grid">
+                <div class="grid">
                     <!-- TUBES INTERNES -->
                     <div>
-                        <div class="section-title">
-                            <div class="pill" style="background: var(--primary); color: white;">TI</div>
-                            <h2>Tubes Internes</h2>
+                        <div class="section-title"
+                            style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-left: 5px;">
+                            <div class="pill"
+                                style="background: var(--primary); color: white; padding: 2px 8px; font-size: 0.7rem; border-radius: 4px;">
+                                INTERNE</div>
+                            <h2 style="font-size: 1rem; margin: 0; color: var(--text-main);">Série TI</h2>
                         </div>
-                        <table class="tube-table">
-                            <thead>
-                                <tr>
-                                    <th>Type</th>
-                                    <th>Poids au mètre</th>
-                                    <th style="text-align: right;">Poids Total</th>
-                                </tr>
-                            </thead>
-                            <tbody id="ti-body">
-                                <tr data-weight="0.066">
-                                    <td class="tube-type">TI 8x12</td>
-                                    <td class="tube-ref">0,066 kg/m</td>
-                                    <td class="tube-result-cell">
-                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
-                                    </td>
-                                </tr>
-                                <tr data-weight="0.093">
-                                    <td class="tube-type">TI 12x16</td>
-                                    <td class="tube-ref">0,093 kg/m</td>
-                                    <td class="tube-result-cell">
-                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
-                                    </td>
-                                </tr>
-                                <tr data-weight="0.145">
-                                    <td class="tube-type">TI 15x20</td>
-                                    <td class="tube-ref">0,145 kg/m</td>
-                                    <td class="tube-result-cell">
-                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
-                                    </td>
-                                </tr>
-                                <tr data-weight="0.243">
-                                    <td class="tube-type">TI 24x29,5</td>
-                                    <td class="tube-ref">0,243 kg/m</td>
-                                    <td class="tube-result-cell">
-                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="tube-table-card">
+                            <div class="table-header">
+                                <span>Type</span>
+                                <span>Réf (kg/m)</span>
+                                <span style="text-align: right;">Long. (m)</span>
+                                <span style="text-align: right;">Poids (kg)</span>
+                            </div>
+                            <div class="tube-row">
+                                <span class="tube-name">TI 8x12</span>
+                                <span class="tube-ref">0,066</span>
+                                <div class="tube-input-cell">
+                                    <div class="field">
+                                        <input type="number" class="tube-input" data-weight="0.066" placeholder="0"
+                                            step="any" min="0">
+                                    </div>
+                                </div>
+                                <span class="tube-result-cell">0,00</span>
+                            </div>
+                            <div class="tube-row">
+                                <span class="tube-name">TI 12x16</span>
+                                <span class="tube-ref">0,093</span>
+                                <div class="tube-input-cell">
+                                    <div class="field">
+                                        <input type="number" class="tube-input" data-weight="0.093" placeholder="0"
+                                            step="any" min="0">
+                                    </div>
+                                </div>
+                                <span class="tube-result-cell">0,00</span>
+                            </div>
+                            <div class="tube-row">
+                                <span class="tube-name">TI 15x20</span>
+                                <span class="tube-ref">0,145</span>
+                                <div class="tube-input-cell">
+                                    <div class="field">
+                                        <input type="number" class="tube-input" data-weight="0.145" placeholder="0"
+                                            step="any" min="0">
+                                    </div>
+                                </div>
+                                <span class="tube-result-cell">0,00</span>
+                            </div>
+                            <div class="tube-row">
+                                <span class="tube-name">TI 24x29,5</span>
+                                <span class="tube-ref">0,243</span>
+                                <div class="tube-input-cell">
+                                    <div class="field">
+                                        <input type="number" class="tube-input" data-weight="0.243" placeholder="0"
+                                            step="any" min="0">
+                                    </div>
+                                </div>
+                                <span class="tube-result-cell">0,00</span>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- TUBES EXTERNES -->
                     <div>
-                        <div class="section-title">
-                            <div class="pill" style="background: var(--primary); color: white;">TE</div>
-                            <h2>Tubes Externes</h2>
+                        <div class="section-title"
+                            style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-left: 5px;">
+                            <div class="pill"
+                                style="background: var(--primary); color: white; padding: 2px 8px; font-size: 0.7rem; border-radius: 4px;">
+                                EXTERNE</div>
+                            <h2 style="font-size: 1rem; margin: 0; color: var(--text-main);">Série TE</h2>
                         </div>
-                        <table class="tube-table">
-                            <thead>
-                                <tr>
-                                    <th>Type</th>
-                                    <th>Poids au mètre</th>
-                                    <th style="text-align: right;">Poids Total</th>
-                                </tr>
-                            </thead>
-                            <tbody id="te-body">
-                                <tr data-weight="0.34">
-                                    <td class="tube-type">TE 30</td>
-                                    <td class="tube-ref">0,340 kg/m</td>
-                                    <td class="tube-result-cell">
-                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
-                                    </td>
-                                </tr>
-                                <tr data-weight="0.549">
-                                    <td class="tube-type">TE 39</td>
-                                    <td class="tube-ref">0,549 kg/m</td>
-                                    <td class="tube-result-cell">
-                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
-                                    </td>
-                                </tr>
-                                <tr data-weight="0.779">
-                                    <td class="tube-type">TE 53</td>
-                                    <td class="tube-ref">0,779 kg/m</td>
-                                    <td class="tube-result-cell">
-                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
-                                    </td>
-                                </tr>
-                                <tr data-weight="1.237">
-                                    <td class="tube-type">TE 70</td>
-                                    <td class="tube-ref">1,237 kg/m</td>
-                                    <td class="tube-result-cell">
-                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
-                                    </td>
-                                </tr>
-                                <tr data-weight="1.402">
-                                    <td class="tube-type">TE 80</td>
-                                    <td class="tube-ref">1,402 kg/m</td>
-                                    <td class="tube-result-cell">
-                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
-                                    </td>
-                                </tr>
-                                <tr data-weight="1.731">
-                                    <td class="tube-type">TE 100</td>
-                                    <td class="tube-ref">1,731 kg/m</td>
-                                    <td class="tube-result-cell">
-                                        <span class="tube-result-val">0,00</span><span class="tube-unit">kg</span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="tube-table-card">
+                            <div class="table-header">
+                                <span>Type</span>
+                                <span>Réf (kg/m)</span>
+                                <span style="text-align: right;">Long. (m)</span>
+                                <span style="text-align: right;">Poids (kg)</span>
+                            </div>
+                            <div class="tube-row">
+                                <span class="tube-name">TE 30</span>
+                                <span class="tube-ref">0,340</span>
+                                <div class="tube-input-cell">
+                                    <div class="field">
+                                        <input type="number" class="tube-input" data-weight="0.34" placeholder="0"
+                                            step="any" min="0">
+                                    </div>
+                                </div>
+                                <span class="tube-result-cell">0,00</span>
+                            </div>
+                            <div class="tube-row">
+                                <span class="tube-name">TE 39</span>
+                                <span class="tube-ref">0,549</span>
+                                <div class="tube-input-cell">
+                                    <div class="field">
+                                        <input type="number" class="tube-input" data-weight="0.549" placeholder="0"
+                                            step="any" min="0">
+                                    </div>
+                                </div>
+                                <span class="tube-result-cell">0,00</span>
+                            </div>
+                            <div class="tube-row">
+                                <span class="tube-name">TE 53</span>
+                                <span class="tube-ref">0,779</span>
+                                <div class="tube-input-cell">
+                                    <div class="field">
+                                        <input type="number" class="tube-input" data-weight="0.779" placeholder="0"
+                                            step="any" min="0">
+                                    </div>
+                                </div>
+                                <span class="tube-result-cell">0,00</span>
+                            </div>
+                            <div class="tube-row">
+                                <span class="tube-name">TE 70</span>
+                                <span class="tube-ref">1,237</span>
+                                <div class="tube-input-cell">
+                                    <div class="field">
+                                        <input type="number" class="tube-input" data-weight="1.237" placeholder="0"
+                                            step="any" min="0">
+                                    </div>
+                                </div>
+                                <span class="tube-result-cell">0,00</span>
+                            </div>
+                            <div class="tube-row">
+                                <span class="tube-name">TE 80</span>
+                                <span class="tube-ref">1,402</span>
+                                <div class="tube-input-cell">
+                                    <div class="field">
+                                        <input type="number" class="tube-input" data-weight="1.402" placeholder="0"
+                                            step="any" min="0">
+                                    </div>
+                                </div>
+                                <span class="tube-result-cell">0,00</span>
+                            </div>
+                            <div class="tube-row">
+                                <span class="tube-name">TE 100</span>
+                                <span class="tube-ref">1,731</span>
+                                <div class="tube-input-cell">
+                                    <div class="field">
+                                        <input type="number" class="tube-input" data-weight="1.731" placeholder="0"
+                                            step="any" min="0">
+                                    </div>
+                                </div>
+                                <span class="tube-result-cell">0,00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TOTAL POIDS -->
+                <div class="total-card">
+                    <div>
+                        <h3>Poids Total Estimé</h3>
+                        <p style="margin: 4px 0 0 0; opacity: 0.8; font-size: 0.8rem;">Cumul de toutes les lignes</p>
+                    </div>
+                    <div>
+                        <span class="big-val" id="grand-total">0,00</span><span class="unit">kg</span>
                     </div>
                 </div>
 
