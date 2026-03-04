@@ -1,0 +1,278 @@
+/* Styles spécifiques aux calculateurs (Poids Tube & Poids Spire) */
+
+.tube-table-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.table-header {
+    background-color: var(--bg-input);
+    padding: 12px 16px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr 1fr;
+    gap: 12px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+}
+
+.tube-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr 1fr;
+    gap: 12px;
+    padding: 12px 16px;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    transition: background-color 0.2s;
+}
+
+.tube-row:last-child {
+    border-bottom: none;
+}
+
+.tube-row:hover {
+    background-color: rgba(216, 29, 44, 0.02);
+}
+
+.tube-name {
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.tube-ref {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.tube-input-cell .field {
+    margin-bottom: 0;
+}
+
+.tube-input-cell input {
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    text-align: right;
+}
+
+.tube-result-cell {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-weight: 800;
+    color: var(--primary);
+    font-size: 1rem;
+}
+
+/* Spires specific */
+.spire-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.spire-table th {
+    background-color: var(--bg-input);
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+.spire-table th:hover {
+    color: var(--primary);
+    background-color: rgba(216, 29, 44, 0.05);
+}
+
+.spire-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+.spire-table tr:last-child td {
+    border-bottom: none;
+}
+
+.spire-table tr:hover {
+    background-color: rgba(216, 29, 44, 0.02);
+}
+
+.sort-icon {
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 0.8rem;
+    opacity: 0.5;
+}
+
+.result-cell {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-weight: 800;
+    color: var(--primary);
+    font-size: 1rem;
+    white-space: nowrap;
+}
+
+/* Search bar */
+.search-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+    background-color: var(--bg-card);
+    border: 2px solid var(--primary);
+    border-radius: 999px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    padding: 5px 15px;
+    transition: all 0.3s ease;
+    z-index: 2000;
+    /* Sidebar/Mobile header will be 3000 */
+}
+
+.search-container.sticky {
+    top: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.search-container input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    color: var(--text-main);
+    outline: none;
+    font-size: 1rem;
+}
+
+.search-container input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+.search-container svg {
+    color: var(--text-muted);
+    width: 20px;
+    height: 20px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin-top: 30px;
+}
+
+/* Total Card */
+.total-card {
+    margin-top: 32px;
+    background: linear-gradient(135deg, var(--primary), #b91926);
+    color: white;
+    padding: 24px 32px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 10px 15px -3px rgba(216, 29, 44, 0.3);
+    flex-wrap: wrap;
+    gap: 20px;
+    z-index: 100;
+}
+
+.total-card h3 {
+    margin: 0;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.9;
+}
+
+.total-card .big-val {
+    font-size: 2.5rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+}
+
+.total-card .unit {
+    font-size: 1.2rem;
+    margin-left: 8px;
+    opacity: 0.8;
+}
+
+.hidden-row {
+    display: none !important;
+}
+
+/* Responsive */
+@media (min-width: 769px) {
+    .total-card {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 380px;
+        margin: 0;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+}
+
+@media (max-width: 768px) {
+    .table-header {
+        display: none;
+    }
+
+    .tube-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        padding: 16px;
+    }
+
+    .tube-name {
+        grid-column: span 2;
+        font-size: 1.1rem;
+    }
+
+    .total-card {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 0;
+        border-radius: 0;
+        padding: 16px;
+        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    .total-card .big-val {
+        font-size: 1.8rem;
+    }
+
+    .footer {
+        margin-bottom: 100px;
+    }
+
+    .search-container {
+        top: 80px;
+    }
+
+    .search-container.sticky {
+        top: 80px;
+    }
+}
