@@ -25,6 +25,37 @@
                     </div>
                 </header>
 
+                <div class="category-header">
+                    <h2>Rapports & Documents</h2>
+                </div>
+                <div class="dashboard-grid">
+                    <!-- Tool Card: Rapport d'intervention -->
+                    <a href="rapport-intervention.html" class="app-card">
+                        <div class="app-card-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                            </svg>
+                        </div>
+                        <div class="app-card-content">
+                            <div class="app-card-header">
+                                <h3>Rapport d'Intervention</h3>
+                            </div>
+                            <p>Générateur de rapports PDF standardisés avec photos et grille de relevés.</p>
+                            <div class="app-card-footer">
+                                <span>Ouvrir l'outil</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="category-header" style="margin-top: 40px;">
+                    <h2>Calculateurs</h2>
+                </div>
                 <div class="dashboard-grid">
                     <!-- Tool Card: Couple Moteur -->
                     <a href="couple-moteur.html" class="app-card">
@@ -52,19 +83,13 @@
                         </div>
                     </a>
 
-                    <!-- Tool Card: Rapport d'intervention -->
-                    <a href="rapport-intervention.html" class="app-card">
-                        <div class="app-card-icon">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
-                            </svg>
-                        </div>
-                        <div class="app-card-content">
+                    <!-- Tool Card: Poids Tube -->
+                    <a href="poids-tube.html" class="app-card image-bg tube-bg">
+                        <div class="app-card-content" style="padding-top: 60px;">
                             <div class="app-card-header">
-                                <h3>Rapport d'Intervention</h3>
+                                <h3>Poids de Tube</h3>
                             </div>
-                            <p>Générateur de rapports PDF standardisés avec photos et grille de relevés.</p>
+                            <p>Calculer le poids total des tubes internes et externes selon leur longueur.</p>
                             <div class="app-card-footer">
                                 <span>Ouvrir l'outil</span>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -75,19 +100,13 @@
                         </div>
                     </a>
 
-                    <!-- Tool Card: Poids Tube -->
-                    <a href="poids-tube.html" class="app-card">
-                        <div class="app-card-icon weight">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
-                            </svg>
-                        </div>
-                        <div class="app-card-content">
+                    <!-- Tool Card: Poids Spire -->
+                    <a href="poids-spire.html" class="app-card image-bg spire-bg">
+                        <div class="app-card-content" style="padding-top: 60px;">
                             <div class="app-card-header">
-                                <h3>Poids de Tube</h3>
+                                <h3>Poids de Spire</h3>
                             </div>
-                            <p>Calculer le poids total des tubes internes et externes selon leur longueur.</p>
+                            <p>Calculer le poids total des spires avec recherches et historique des calculs.</p>
                             <div class="app-card-footer">
                                 <span>Ouvrir l'outil</span>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -110,6 +129,47 @@
             box-shadow: var(--shadow-md);
             transform: translateY(-2px);
             background-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .category-header {
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .category-header h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .app-card.image-bg {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            justify-content: flex-end;
+        }
+
+        [data-theme="light"] .app-card.image-bg {
+            background-image: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.9) 40%, rgba(255, 255, 255, 0.4) 100%) !important;
+        }
+
+        /* Inline logic is overriding the bg image light gradient, so we use a small class to fix it */
+        .app-card.image-bg.spire-bg {
+            background-image: linear-gradient(to top, rgba(30, 37, 54, 1) 0%, rgba(30, 37, 54, 0.85) 40%, rgba(30, 37, 54, 0.4) 100%), url('assets/img/spires.jpg');
+        }
+
+        .app-card.image-bg.tube-bg {
+            background-image: linear-gradient(to top, rgba(30, 37, 54, 1) 0%, rgba(30, 37, 54, 0.85) 40%, rgba(30, 37, 54, 0.4) 100%), url('assets/img/tubes.jpg');
+        }
+
+        [data-theme="light"] .app-card.image-bg.spire-bg {
+            background-image: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 0.5) 100%), url('assets/img/spires.jpg');
+        }
+
+        [data-theme="light"] .app-card.image-bg.tube-bg {
+            background-image: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 0.5) 100%), url('assets/img/tubes.jpg');
         }
     </style>
 </body>

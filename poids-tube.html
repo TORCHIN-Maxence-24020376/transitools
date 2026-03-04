@@ -109,6 +109,23 @@
             opacity: 0.8;
         }
 
+        /* Fixed positioning on desktop */
+        @media (min-width: 769px) {
+            .total-card {
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                width: 350px;
+                margin: 0;
+                z-index: 100;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            }
+
+            .grid {
+                margin-bottom: 40px;
+            }
+        }
+
         @media (max-width: 768px) {
             .table-header {
                 display: none;
@@ -125,12 +142,25 @@
                 font-size: 1.1rem;
             }
 
-            .tube-ref {
-                font-size: 0.75rem;
-            }
-
             .tube-result-cell {
                 font-size: 1.1rem;
+            }
+
+            .total-card {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: 0;
+                border-radius: 0;
+                z-index: 100;
+                padding: 16px;
+                box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
+            }
+
+            .footer {
+                margin-bottom: 80px;
+                /* space for the fixed total card */
             }
         }
     </style>

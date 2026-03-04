@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Calculateur de poids de spires - Transitools</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" href="assets/img/logo-site.ico" />
+    <style>
+        .search-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            background-color: var(--bg-card);
+            border: 2px solid var(--primary);
+            border-radius: 999px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            padding: 5px 15px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .search-container.sticky {
+            top: 10px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-main);
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .search-container svg {
+            color: var(--text-muted);
+            width: 20px;
+            height: 20px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            margin-top: 40px;
+            /* Space for the search bar */
+        }
+
+        .spire-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .spire-table th {
+            background-color: var(--bg-input);
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .spire-table th:hover {
+            color: var(--primary);
+            background-color: rgba(216, 29, 44, 0.05);
+        }
+
+        .spire-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        .spire-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .spire-table tr:hover {
+            background-color: rgba(216, 29, 44, 0.02);
+        }
+
+        .sort-icon {
+            display: inline-block;
+            margin-left: 5px;
+            font-size: 0.8rem;
+            opacity: 0.5;
+        }
+
+        .tube-input-cell .field {
+            margin-bottom: 0;
+            max-width: 120px;
+        }
+
+        .tube-input-cell input {
+            padding: 8px 10px;
+            font-size: 0.9rem;
+            text-align: right;
+        }
+
+        .result-cell {
+            text-align: right;
+            font-family: var(--font-mono);
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+
+        .total-card {
+            margin-top: 32px;
+            background: linear-gradient(135deg, var(--primary), #b91926);
+            color: white;
+            padding: 24px 32px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 15px -3px rgba(216, 29, 44, 0.3);
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .total-card h3 {
+            margin: 0;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.9;
+        }
+
+        .total-card .big-val {
+            font-size: 2.5rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+        }
+
+        .total-card .unit {
+            font-size: 1.2rem;
+            margin-left: 8px;
+            opacity: 0.8;
+        }
+
+        /* Fixed positioning on desktop */
+        @media (min-width: 769px) {
+            .total-card {
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                width: 380px;
+                margin: 0;
+                z-index: 100;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            }
+
+            .table-responsive {
+                margin-bottom: 40px;
+            }
+        }
+
+        /* Fixed positioning on mobile */
+        @media (max-width: 768px) {
+            .total-card {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: 0;
+                border-radius: 0;
+                z-index: 100;
+                padding: 16px;
+                box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
+                flex-direction: row;
+                gap: 10px;
+            }
+
+            .total-card .big-val {
+                font-size: 1.8rem;
+            }
+
+            .footer {
+                margin-bottom: 100px;
+                /* space for the fixed total card */
+            }
+
+            .search-container {
+                top: 80px;
+            }
+
+            .search-container.sticky {
+                top: 80px;
+            }
+        }
+
+        .hidden-row {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Floating Search Bar -->
+    <div class="search-container" id="search-container">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input type="text" id="search-input" placeholder="Rechercher par Nº catalogue fournisseur..."
+            autocomplete="off">
+    </div>
+
+    <div class="app-container">
+        <div id="sidebar-placeholder"></div>
+
+        <main class="main-content">
+            <div class="wrap">
+                <header>
+                    <div style="margin-top: 40px;">
+                        <h1>Calculateur de poids de Spires</h1>
+                        <p class="subtitle">
+                            Saisissez les longueurs pour chaque type de spire pour obtenir le poids total.
+                        </p>
+                    </div>
+                </header>
+
+                <div class="table-responsive">
+                    <table class="spire-table" id="spire-table">
+                        <thead>
+                            <tr>
+                                <th onclick="sortTable(0)">N° <span class="sort-icon">⇅</span></th>
+                                <th onclick="sortTable(1)">N° Article <span class="sort-icon">⇅</span></th>
+                                <th onclick="sortTable(2)">Description <span class="sort-icon">⇅</span></th>
+                                <th onclick="sortTable(3)">Nº catalogue <span class="sort-icon">⇅</span></th>
+                                <th onclick="sortTable(4)">Réf (kg/m) <span class="sort-icon">⇅</span></th>
+                                <th>Long. (m)</th>
+                                <th style="text-align: right;">Poids (kg)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="spire-table-body">
+                            <!-- Rows injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- TOTAL POIDS -->
+                <div class="total-card">
+                    <div>
+                        <h3>Poids Total Estimé</h3>
+                        <p style="margin: 4px 0 0 0; opacity: 0.8; font-size: 0.8rem;">Cumul de toutes les spires</p>
+                    </div>
+                    <div>
+                        <span class="big-val" id="grand-total">0,00</span><span class="unit">kg</span>
+                    </div>
+                </div>
+
+                <footer class="footer">
+                    Poids calculé suivant les données fournisseur. Transitools © 2026
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <script src="assets/js/nav.js"></script>
+    <script src="assets/js/poids-spire.js"></script>
+</body>
+
+</html>

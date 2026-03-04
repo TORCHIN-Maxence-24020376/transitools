@@ -209,6 +209,8 @@ header {
     align-items: flex-start;
     justify-content: space-between;
     gap: 20px;
+    position: relative;
+    z-index: 1500;
 }
 
 h1 {
