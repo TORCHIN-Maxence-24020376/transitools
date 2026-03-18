@@ -1,0 +1,923 @@
+﻿<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Transitools - Etiquettes</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" href="assets/img/logo-site.ico" />
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        .wrap {
+            max-width: 1200px;
+        }
+
+        .tool-hero {
+            background: linear-gradient(120deg, var(--bg-card) 0%, var(--bg-card) 60%, var(--primary-dim) 100%);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            color: var(--text-main);
+        }
+
+        .tool-hero h1 {
+            border-left-color: var(--primary);
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .tool-hero .subtitle {
+            color: var(--text-muted);
+            max-width: 100ch;
+        }
+
+        .label-tool-grid {
+            display: grid;
+            grid-template-columns: 390px 1fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .panel-head {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            font-weight: 700;
+            background: var(--primary-dim);
+        }
+
+        .panel-body {
+            padding: 16px;
+        }
+
+        .control-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .control-grid .full {
+            grid-column: 1 / -1;
+        }
+
+        .input,
+        .select,
+        .btn {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-main);
+            font: inherit;
+            padding: 10px 12px;
+        }
+
+        .input:focus,
+        .select:focus {
+            outline: 2px solid #fddce0;
+            border-color: #f3a2ab;
+        }
+
+        .btn {
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            background: var(--bg-card);
+        }
+
+        .status {
+            margin-top: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        .preview-meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+        }
+
+        .labels-preview {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            align-items: flex-start;
+            min-height: 240px;
+        }
+
+        .labels-preview.edge-debug .print-label {
+            outline: 0.25mm solid #ff3b30;
+            outline-offset: -0.25mm;
+        }
+
+        .labels-preview.edge-debug .print-label .qr-wrap {
+            background: rgba(255, 59, 48, 0.14);
+        }
+
+        .labels-preview.edge-debug .print-label .label-spacer {
+            background: rgba(0, 122, 255, 0.18);
+        }
+
+        .labels-preview.edge-debug .print-label .label-info {
+            background: rgba(52, 199, 89, 0.16);
+        }
+
+        .sheet-preview {
+            position: relative;
+            width: 210mm;
+            height: 297mm;
+            background: #fff;
+            border: 1px solid #d4dce5;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+            transform-origin: top left;
+            overflow: hidden;
+        }
+
+        .sheet-grid {
+            position: absolute;
+            box-sizing: border-box;
+            display: grid;
+            align-content: start;
+        }
+
+        .print-label {
+            box-sizing: border-box;
+            display: flex;
+            align-items: stretch;
+            overflow: hidden;
+            background: #fff;
+            border: none;
+            color: #111;
+        }
+
+        .print-label .qr-wrap {
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 0;
+            background: #fff;
+            flex: 0 0 auto;
+        }
+
+        .print-label .qr-wrap img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: top left;
+        }
+
+        .print-label .label-spacer {
+            flex: 0 0 auto;
+            border: none;
+            background: #fff;
+        }
+
+        .print-label .label-info {
+            flex: 1;
+            min-width: 0;
+            padding: 0;
+            line-height: 1;
+            white-space: pre-wrap;
+            overflow: hidden;
+            word-break: break-word;
+            color: #111;
+            margin: 0;
+        }
+
+        #print-area {
+            display: none;
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            html,
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            body * {
+                visibility: hidden !important;
+            }
+
+            #print-area,
+            #print-area * {
+                visibility: visible !important;
+            }
+
+            #print-area {
+                display: block !important;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+
+            #print-area .sheet-preview {
+                margin: 0;
+                border: none;
+                box-shadow: none;
+                break-after: page;
+                page-break-after: always;
+            }
+
+            #print-area .print-label {
+                border: none;
+            }
+        }
+
+        @media (max-width: 1050px) {
+            .label-tool-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 16px;
+            }
+
+            .control-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <div id="sidebar-placeholder"></div>
+
+        <main class="main-content">
+            <div class="wrap">
+                <section class="tool-hero">
+                    <h1>Générateur d'étiquettes</h1>
+                    <p class="subtitle">Importez un CSV ou XLSX, utilisez les 3 dernières colonnes (QR | espace | informations), choisissez un layout, puis exportez en PDF prêt à imprimer.</p>
+                </section>
+
+                <div class="label-tool-grid">
+                    <section class="panel">
+                        <div class="panel-head">Paramètres</div>
+                        <div class="panel-body">
+                            <div class="control-grid">
+                                <div class="full">
+                                    <label for="fileInput">Fichier d'entrée (CSV / XLSX)</label>
+                                    <input id="fileInput" class="input" type="file" accept=".csv,.xlsx,.xls" />
+                                </div>
+                                <div class="full">
+                                    <label for="preset">Gabarit d'étiquettes</label>
+                                    <select id="preset" class="select"></select>
+                                </div>
+                                <div>
+                                    <label for="cols">Colonnes / page</label>
+                                    <input id="cols" class="input" type="number" min="1" max="8" step="1" />
+                                </div>
+                                <div>
+                                    <label for="rows">Lignes / page</label>
+                                    <input id="rows" class="input" type="number" min="1" max="15" step="1" />
+                                </div>
+                                <div>
+                                    <label for="labelW">Largeur étiquette (mm)</label>
+                                    <input id="labelW" class="input" type="number" min="20" max="200" step="0.1" />
+                                </div>
+                                <div>
+                                    <label for="labelH">Hauteur étiquette (mm)</label>
+                                    <input id="labelH" class="input" type="number" min="10" max="100" step="0.1" />
+                                </div>
+                                <div>
+                                    <label for="marginL">Marge gauche (mm)</label>
+                                    <input id="marginL" class="input" type="number" min="0" max="30" step="0.1" />
+                                </div>
+                                <div>
+                                    <label for="marginT">Marge haute (mm)</label>
+                                    <input id="marginT" class="input" type="number" min="0" max="30" step="0.1" />
+                                </div>
+                                <div>
+                                    <label for="gapX">Espace horizontal (mm)</label>
+                                    <input id="gapX" class="input" type="number" min="0" max="20" step="0.1" />
+                                </div>
+                                <div>
+                                    <label for="gapY">Espace vertical (mm)</label>
+                                    <input id="gapY" class="input" type="number" min="0" max="20" step="0.1" />
+                                </div>
+                                <div>
+                                    <label for="qrMm">Zone QR (mm)</label>
+                                    <input id="qrMm" class="input" type="number" min="8" max="45" step="0.1" />
+                                </div>
+                                <div>
+                                    <label for="spacerMm">Zone espace (mm)</label>
+                                    <input id="spacerMm" class="input" type="number" min="0" max="30" step="0.1" />
+                                </div>
+                                <div>
+                                    <label for="fontPt">Texte info (pt)</label>
+                                    <input id="fontPt" class="input" type="number" min="6" max="16" step="0.5" />
+                                </div>
+                                <div>
+                                    <label for="edgeDebug">Contrôle bords</label>
+                                    <select id="edgeDebug" class="select">
+                                        <option value="off">Normal</option>
+                                        <option value="on">Mode contrôle</option>
+                                    </select>
+                                </div>
+                                <div class="full" style="display: flex; gap: 10px; margin-top: 4px;">
+                                    <button id="previewBtn" class="btn btn-secondary" type="button">Actualiser l'aperçu</button>
+                                    <button id="pdfBtn" class="btn btn-primary" type="button">Générer PDF</button>
+                                </div>
+                            </div>
+                            <div id="status" class="status">Aucun fichier chargé.</div>
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panel-head">Aperçu du layout</div>
+                        <div class="panel-body">
+                            <div class="preview-meta">
+                                <span id="rowCount">0 lignes détectées</span>
+                                <span id="colInfo">3 dernières colonnes utilisées</span>
+                            </div>
+                            <div id="preview" class="labels-preview"></div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="assets/js/nav.js"></script>
+    <script>
+        const presets = {
+            'Planche 2x7 (bord à bord)': { cols: 2, rows: 7, labelW: 103.75, labelH: 42.4, marginL: 0, marginT: 0, gapX: 2.5, gapY: 0.0, qrMm: 26, spacerMm: 7, fontPt: 8.5 },
+            'Planche 3x7 (bord à bord)': { cols: 3, rows: 7, labelW: 68.333, labelH: 42.4, marginL: 0, marginT: 0, gapX: 2.5, gapY: 0.0, qrMm: 22, spacerMm: 5, fontPt: 7.8 },
+            'A4 personnalisé': { cols: 2, rows: 8, labelW: 103.5, labelH: 33.0, marginL: 0, marginT: 0, gapX: 3.0, gapY: 2.0, qrMm: 23, spacerMm: 6, fontPt: 8 }
+        };
+
+        const els = {
+            fileInput: document.getElementById('fileInput'),
+            preset: document.getElementById('preset'),
+            cols: document.getElementById('cols'),
+            rows: document.getElementById('rows'),
+            labelW: document.getElementById('labelW'),
+            labelH: document.getElementById('labelH'),
+            marginL: document.getElementById('marginL'),
+            marginT: document.getElementById('marginT'),
+            gapX: document.getElementById('gapX'),
+            gapY: document.getElementById('gapY'),
+            qrMm: document.getElementById('qrMm'),
+            spacerMm: document.getElementById('spacerMm'),
+            fontPt: document.getElementById('fontPt'),
+            edgeDebug: document.getElementById('edgeDebug'),
+            previewBtn: document.getElementById('previewBtn'),
+            pdfBtn: document.getElementById('pdfBtn'),
+            status: document.getElementById('status'),
+            rowCount: document.getElementById('rowCount'),
+            preview: document.getElementById('preview')
+        };
+
+        let parsedRows = [];
+        let previewTimer = null;
+        const qrCache = new Map();
+        const SETTINGS_KEY = 'transitools_etiquettes_settings_v1';
+
+        function setStatus(message) {
+            els.status.textContent = message;
+        }
+
+        function safeNumber(value, fallback) {
+            const num = Number(value);
+            return Number.isFinite(num) ? num : fallback;
+        }
+
+        function normalizeLayoutDimensions(cfg) {
+            const minInfoMm = 8;
+            const maxQrByHeight = Math.max(4, cfg.labelH);
+            let qrMm = Math.min(cfg.qrMm, maxQrByHeight);
+            let spacerMm = Math.max(0, cfg.spacerMm);
+            const maxCombined = Math.max(4, cfg.labelW - minInfoMm);
+            if ((qrMm + spacerMm) > maxCombined) {
+                const ratio = qrMm / Math.max(1, qrMm + spacerMm);
+                qrMm = Math.max(4, Number((maxCombined * ratio).toFixed(2)));
+                spacerMm = Math.max(0, Number((maxCombined - qrMm).toFixed(2)));
+            }
+            return { ...cfg, qrMm, spacerMm };
+        }
+
+        function getConfig() {
+            const base = {
+                cols: Math.max(1, safeNumber(els.cols.value, 2)),
+                rows: Math.max(1, safeNumber(els.rows.value, 7)),
+                labelW: Math.max(20, safeNumber(els.labelW.value, 99.1)),
+                labelH: Math.max(10, safeNumber(els.labelH.value, 38.1)),
+                marginL: Math.max(0, safeNumber(els.marginL.value, 0)),
+                marginT: Math.max(0, safeNumber(els.marginT.value, 0)),
+                gapX: Math.max(0, safeNumber(els.gapX.value, 2.5)),
+                gapY: Math.max(0, safeNumber(els.gapY.value, 0)),
+                qrMm: Math.max(8, safeNumber(els.qrMm.value, 24)),
+                spacerMm: Math.max(0, safeNumber(els.spacerMm.value, 6)),
+                fontPt: Math.max(6, safeNumber(els.fontPt.value, 8)),
+                edgeDebug: els.edgeDebug.value === 'on'
+            };
+            return normalizeLayoutDimensions(base);
+        }
+
+        function readCurrentSettings() {
+            return {
+                preset: els.preset.value || '',
+                cols: els.cols.value,
+                rows: els.rows.value,
+                labelW: els.labelW.value,
+                labelH: els.labelH.value,
+                marginL: els.marginL.value,
+                marginT: els.marginT.value,
+                gapX: els.gapX.value,
+                gapY: els.gapY.value,
+                qrMm: els.qrMm.value,
+                spacerMm: els.spacerMm.value,
+                fontPt: els.fontPt.value,
+                edgeDebug: els.edgeDebug.value
+            };
+        }
+
+        function saveSettings() {
+            try {
+                localStorage.setItem(SETTINGS_KEY, JSON.stringify(readCurrentSettings()));
+            } catch (error) {
+                // ignore storage errors
+            }
+        }
+
+        function restoreSettings() {
+            try {
+                const raw = localStorage.getItem(SETTINGS_KEY);
+                if (!raw) return false;
+                const data = JSON.parse(raw);
+                if (data.preset && presets[data.preset]) els.preset.value = data.preset;
+                ['cols', 'rows', 'labelW', 'labelH', 'marginL', 'marginT', 'gapX', 'gapY', 'qrMm', 'spacerMm', 'fontPt'].forEach((k) => {
+                    if (data[k] !== undefined && data[k] !== null && data[k] !== '') els[k].value = data[k];
+                });
+                if (data.edgeDebug === 'on' || data.edgeDebug === 'off') els.edgeDebug.value = data.edgeDebug;
+                return true;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        function getActiveRecords() {
+            return getRecordsFromRows(parsedRows);
+        }
+
+        function applyPreset(name) {
+            const p = presets[name];
+            if (!p) return;
+            els.cols.value = p.cols;
+            els.rows.value = p.rows;
+            els.labelW.value = p.labelW;
+            els.labelH.value = p.labelH;
+            els.marginL.value = p.marginL;
+            els.marginT.value = p.marginT;
+            els.gapX.value = p.gapX;
+            els.gapY.value = p.gapY;
+            els.qrMm.value = p.qrMm;
+            els.spacerMm.value = p.spacerMm;
+            els.fontPt.value = p.fontPt;
+            saveSettings();
+            if (parsedRows.length) renderPreview();
+        }
+
+        function normalizeCell(cell) {
+            if (cell == null) return '';
+            return String(cell).trim();
+        }
+
+        function toSentenceCase(value) {
+            if (!value) return '';
+            return value.charAt(0).toUpperCase() + value.slice(1);
+        }
+
+        function formatInfoValue(value) {
+            const text = normalizeCell(value);
+            if (!text) return '';
+            if (text.includes('\n')) return text;
+
+            // Expected pattern: "CODE description..." -> "CODE\nDescription..."
+            const match = text.match(/^([A-Za-z0-9]+(?:-[A-Za-z0-9]+)+)\s+(.+)$/);
+            if (!match) return text;
+
+            const code = match[1];
+            const description = toSentenceCase(match[2].trim());
+            return `${code}\n${description}`;
+        }
+
+        function getRecordsFromRows(rows) {
+            const bodyRows = rows.slice(1);
+            return bodyRows
+                .map((row) => {
+                    const compact = (Array.isArray(row) ? row : [row]).map(normalizeCell);
+                    while (compact.length && compact[compact.length - 1] === '') compact.pop();
+                    if (compact.length < 3) return null;
+
+                    const start = compact.length - 3;
+                    const qrRaw = compact[start];
+                    const spacer = compact[start + 1];
+                    const info = formatInfoValue(compact[start + 2]);
+                    const fallback = compact.filter(Boolean).join(' | ');
+                    return { qrRaw, spacer, info: info || fallback, fallback };
+                })
+                .filter((r) => r && (r.info || r.qrRaw));
+        }
+
+        function extractQrPayload(record) {
+            const raw = record.qrRaw;
+            if (!raw) return record.info || record.fallback;
+
+            if (/^https?:\/\//i.test(raw)) {
+                try {
+                    const url = new URL(raw);
+                    const dataParam = url.searchParams.get('data');
+                    if (dataParam) return decodeURIComponent(dataParam);
+                    return raw;
+                } catch (error) {
+                    return raw;
+                }
+            }
+            return raw;
+        }
+
+        async function buildQrDataUrl(payload) {
+            const value = payload || '-';
+            if (qrCache.has(value)) return qrCache.get(value);
+
+            const promise = (async () => {
+                if (window.QRCode && typeof window.QRCode.toDataURL === 'function') {
+                    return window.QRCode.toDataURL(value, {
+                        errorCorrectionLevel: 'M',
+                        margin: 0,
+                        width: 220,
+                        color: { dark: '#000000', light: '#ffffff' }
+                    });
+                }
+                return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(value)}`;
+            })();
+
+            qrCache.set(value, promise);
+            return promise;
+        }
+
+        function detectDelimiter(sampleLine) {
+            const candidates = [',', ';', '\t'];
+            let best = ',';
+            let bestCount = -1;
+            candidates.forEach((d) => {
+                const count = sampleLine.split(d).length - 1;
+                if (count > bestCount) {
+                    best = d;
+                    bestCount = count;
+                }
+            });
+            return best;
+        }
+
+        function parseCsvText(text) {
+            const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+            const firstNonEmpty = lines.find((line) => line.trim().length > 0) || '';
+            const delimiter = detectDelimiter(firstNonEmpty);
+            const rows = [];
+
+            lines.forEach((line) => {
+                if (!line.trim()) return;
+                const cells = [];
+                let current = '';
+                let inQuotes = false;
+
+                for (let i = 0; i < line.length; i += 1) {
+                    const ch = line[i];
+                    const next = line[i + 1];
+
+                    if (ch === '"') {
+                        if (inQuotes && next === '"') {
+                            current += '"';
+                            i += 1;
+                        } else {
+                            inQuotes = !inQuotes;
+                        }
+                    } else if (ch === delimiter && !inQuotes) {
+                        cells.push(current);
+                        current = '';
+                    } else {
+                        current += ch;
+                    }
+                }
+                cells.push(current);
+                rows.push(cells);
+            });
+
+            return rows;
+        }
+
+        function decodeCsvBuffer(buffer) {
+            let text = new TextDecoder('utf-8').decode(buffer);
+            const replacementChars = (text.match(/�/g) || []).length;
+            if (replacementChars > 3) {
+                try {
+                    text = new TextDecoder('windows-1252').decode(buffer);
+                } catch (error) {
+                    // Fallback keeps utf-8 decode.
+                }
+            }
+            return text;
+        }
+
+        function schedulePreview() {
+            saveSettings();
+            if (!parsedRows.length) return;
+            clearTimeout(previewTimer);
+            previewTimer = setTimeout(() => {
+                renderPreview();
+            }, 150);
+        }
+
+        function validateLayout(cfg) {
+            // marginL and marginT are top-left offsets (not symmetric margins).
+            const requiredW = cfg.marginL + (cfg.cols * cfg.labelW) + ((cfg.cols - 1) * cfg.gapX);
+            const requiredH = cfg.marginT + (cfg.rows * cfg.labelH) + ((cfg.rows - 1) * cfg.gapY);
+            return requiredW <= 210.2 && requiredH <= 297.2;
+        }
+
+        function syncNormalizedInputs(cfg) {
+            const qrVal = Number(els.qrMm.value);
+            const spVal = Number(els.spacerMm.value);
+            if (Math.abs(qrVal - cfg.qrMm) > 0.01) els.qrMm.value = cfg.qrMm;
+            if (Math.abs(spVal - cfg.spacerMm) > 0.01) els.spacerMm.value = cfg.spacerMm;
+        }
+
+        function buildLabelNode(record, cfg, qrUrl) {
+            const label = document.createElement('article');
+            label.className = 'print-label';
+            label.style.width = `${cfg.labelW}mm`;
+            label.style.height = `${cfg.labelH}mm`;
+
+            const qrWrap = document.createElement('div');
+            qrWrap.className = 'qr-wrap';
+            qrWrap.style.width = `${cfg.qrMm}mm`;
+            qrWrap.style.maxWidth = `${cfg.qrMm}mm`;
+
+            const qrImg = document.createElement('img');
+            qrImg.src = qrUrl;
+            qrImg.alt = 'QR code';
+            qrWrap.appendChild(qrImg);
+
+            const spacer = document.createElement('div');
+            spacer.className = 'label-spacer';
+            spacer.style.width = `${cfg.spacerMm}mm`;
+
+            const info = document.createElement('div');
+            info.className = 'label-info';
+            info.style.fontSize = `${cfg.fontPt}pt`;
+            info.textContent = record.info || '';
+
+            label.append(qrWrap, spacer, info);
+            return label;
+        }
+
+        async function buildSheets(records, cfg) {
+            const labelsPerPage = cfg.cols * cfg.rows;
+            const totalPages = Math.max(1, Math.ceil(records.length / labelsPerPage));
+            const sheets = [];
+
+            for (let pageIndex = 0; pageIndex < totalPages; pageIndex += 1) {
+                const sheet = document.createElement('section');
+                sheet.className = 'sheet-preview';
+
+                const grid = document.createElement('div');
+                grid.className = 'sheet-grid';
+                grid.style.left = `${cfg.marginL}mm`;
+                grid.style.top = `${cfg.marginT}mm`;
+                grid.style.gridTemplateColumns = `repeat(${cfg.cols}, ${cfg.labelW}mm)`;
+                grid.style.gridAutoRows = `${cfg.labelH}mm`;
+                grid.style.columnGap = `${cfg.gapX}mm`;
+                grid.style.rowGap = `${cfg.gapY}mm`;
+
+                const start = pageIndex * labelsPerPage;
+                const end = Math.min(start + labelsPerPage, records.length);
+                for (let i = start; i < end; i += 1) {
+                    const rec = records[i];
+                    const qrUrl = await buildQrDataUrl(extractQrPayload(rec));
+                    grid.appendChild(buildLabelNode(rec, cfg, qrUrl));
+                }
+
+                sheet.appendChild(grid);
+                sheets.push(sheet);
+            }
+
+            return sheets;
+        }
+
+        function scalePreviewSheets() {
+            const sheets = [...els.preview.querySelectorAll('.sheet-preview')];
+            if (!sheets.length) return;
+
+            sheets.forEach((sheet) => {
+                sheet.style.transform = '';
+                sheet.style.marginBottom = '';
+            });
+
+            const available = els.preview.clientWidth - 4;
+            if (available <= 0) return;
+            const sheetWidth = sheets[0].offsetWidth;
+            if (sheetWidth <= available) return;
+
+            const ratio = available / sheetWidth;
+            sheets.forEach((sheet) => {
+                const fullH = sheet.offsetHeight;
+                sheet.style.transform = `scale(${ratio})`;
+                sheet.style.marginBottom = `-${fullH - (fullH * ratio)}px`;
+            });
+        }
+
+        async function renderPreview() {
+            const cfg = getConfig();
+            syncNormalizedInputs(cfg);
+            const allRecords = getRecordsFromRows(parsedRows);
+            const subset = getActiveRecords();
+
+            els.rowCount.textContent = `${allRecords.length} lignes détectées`;
+            els.preview.innerHTML = '';
+
+            if (!allRecords.length) {
+                setStatus('Le fichier est vide ou les 3 dernières colonnes ne sont pas exploitables.');
+                return;
+            }
+
+            if (!validateLayout(cfg)) {
+                setStatus('Le layout dépasse le format A4. Ajustez largeur/hauteur/marges/espaces.');
+                return;
+            }
+
+            const sheets = await buildSheets(subset, cfg);
+            sheets.forEach((sheet) => els.preview.appendChild(sheet));
+            els.preview.classList.toggle('edge-debug', cfg.edgeDebug);
+            scalePreviewSheets();
+            setStatus(`Aperçu mis à jour (${subset.length} étiquettes, ${sheets.length} page(s)).`);
+        }
+
+        async function exportPdf() {
+            const cfg = getConfig();
+            syncNormalizedInputs(cfg);
+            const allRecords = getRecordsFromRows(parsedRows);
+            const records = getActiveRecords();
+            if (!allRecords.length || !records.length) {
+                setStatus('Chargez un fichier avant de générer le PDF.');
+                return;
+            }
+
+            if (!validateLayout(cfg)) {
+                setStatus('Le layout dépasse le format A4. Ajustez largeur/hauteur/marges/espaces.');
+                return;
+            }
+
+            els.pdfBtn.disabled = true;
+            setStatus('Préparation du document pour impression...');
+
+            try {
+                const sheets = await buildSheets(records, cfg);
+                const printArea = document.createElement('div');
+                printArea.id = 'print-area';
+                sheets.forEach((sheet) => printArea.appendChild(sheet));
+
+                document.body.appendChild(printArea);
+                window.print();
+                setTimeout(() => {
+                    if (printArea.parentNode) printArea.parentNode.removeChild(printArea);
+                }, 1000);
+
+                setStatus(`Document prêt: ${records.length} étiquettes sur ${sheets.length} page(s).`);
+            } catch (error) {
+                setStatus(`Erreur pendant la génération: ${error.message}`);
+            } finally {
+                els.pdfBtn.disabled = false;
+            }
+        }
+
+        function parseWorkbookRows(buffer, filename) {
+            const ext = (filename.split('.').pop() || '').toLowerCase();
+
+            if (ext === 'csv') {
+                const text = decodeCsvBuffer(buffer);
+                const rows = parseCsvText(text);
+                setStatus(`CSV chargé: ${filename} (${Math.max(0, rows.length - 1)} lignes de données).`);
+                return rows;
+            }
+
+            if (!window.XLSX) {
+                throw new Error('Le module XLSX est indisponible pour lire ce fichier.');
+            }
+
+            const workbook = XLSX.read(buffer, { type: 'array', raw: false, codepage: 65001 });
+            const firstSheet = workbook.SheetNames[0];
+            if (!firstSheet) return [];
+            const sheet = workbook.Sheets[firstSheet];
+            const rows = XLSX.utils.sheet_to_json(sheet, {
+                header: 1,
+                blankrows: false,
+                defval: ''
+            });
+            setStatus(`Fichier chargé: ${filename} (${Math.max(0, rows.length - 1)} lignes de données).`);
+            return rows;
+        }
+
+        async function onFileChange(evt) {
+            const file = evt.target.files?.[0];
+            if (!file) return;
+
+            try {
+                const buffer = await file.arrayBuffer();
+                parsedRows = parseWorkbookRows(buffer, file.name);
+                await renderPreview();
+            } catch (error) {
+                parsedRows = [];
+                setStatus(`Impossible de lire le fichier: ${error.message}`);
+                els.preview.innerHTML = '';
+                els.rowCount.textContent = '0 lignes détectées';
+            }
+        }
+
+        function init() {
+            Object.keys(presets).forEach((name) => {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                els.preset.appendChild(opt);
+            });
+
+            const hasSaved = restoreSettings();
+            if (!hasSaved) {
+                els.preset.value = Object.keys(presets)[0];
+                applyPreset(els.preset.value);
+            }
+
+            els.fileInput.addEventListener('change', onFileChange);
+            els.preset.addEventListener('change', (e) => {
+                applyPreset(e.target.value);
+                saveSettings();
+            });
+            els.previewBtn.addEventListener('click', renderPreview);
+            els.pdfBtn.addEventListener('click', exportPdf);
+
+            [
+                els.cols, els.rows, els.labelW, els.labelH, els.marginL, els.marginT,
+                els.gapX, els.gapY, els.qrMm, els.spacerMm, els.fontPt
+            ].forEach((input) => {
+                input.addEventListener('input', schedulePreview);
+                input.addEventListener('change', schedulePreview);
+            });
+            els.edgeDebug.addEventListener('change', () => {
+                schedulePreview();
+                saveSettings();
+            });
+
+            window.addEventListener('resize', scalePreviewSheets);
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
